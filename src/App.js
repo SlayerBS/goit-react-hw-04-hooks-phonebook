@@ -9,7 +9,7 @@ import Section from "./components/Section";
 export default function App() {
  
     const [contacts, setContacts]=useState([]);
-    const [filter, setFilter]=useState("");
+    const [filterQuery, setFilterQuery]=useState('');
   
 
   useEffect(()=> {
@@ -37,33 +37,30 @@ export default function App() {
     console.log("Contacts", contacts);
   };
 
-  const handleFilter = (filter) => setFilter({ filter });
+  const handleFilter = (filterQuery) => setFilterQuery( filterQuery);
 
   const deleteContact = (deletedId) => {
-    setContacts((prevState) => ({
-      contacts: prevState.filter(
-        (contact) => contact.id !== deletedId
-      ),
-    }));
+    setContacts(contacts.filter(contact => contact.id !== deletedId));
   };
 
+
   const filteredContacts = () => {
-    console.log(contacts);
+    console.log(contacts, filterQuery);
     return contacts.filter((contact) =>
-      contact.name.toLowerCase().includes(filter.toLowerCase())
+      contact.name.toLowerCase().includes(filterQuery.toLowerCase())
     );
   };
-    
-    return (
+  
+  return (
       <Container>
         <Section title="Phonebook">
           <ContactForm onSubmit={addContact} />
         </Section>
         <Section title="Contacts">
-          <Filter filter={filter} onChange={handleFilter} />
+          <Filter filter={filterQuery} onChange={handleFilter} />
           <ContactList
             contacts={filteredContacts()}
-            onDelete={deleteContact()}
+            onDelete={deleteContact}
           />
         </Section>
       </Container>
