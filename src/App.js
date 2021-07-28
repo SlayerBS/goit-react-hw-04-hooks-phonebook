@@ -7,24 +7,14 @@ import ContactForm from "./components/ContactForm";
 import Section from "./components/Section";
 
 export default function App() {
- 
-    const [contacts, setContacts]=useState([]);
-    const [filterQuery, setFilterQuery]=useState('');
-  
+  const [contacts, setContacts] = useState(() => {
+    return JSON.parse(localStorage.getItem("contacts"));
+  }); //lazy state ititialization
+  const [filterQuery, setFilterQuery] = useState("");
 
-  useEffect(()=> {
-    const contacts = localStorage.getItem("contacts");
-    const parsedContacts = JSON.parse(contacts);
-
-    if (parsedContacts) {
-      setContacts(parsedContacts);
-    }}, []
-  );
-
-  useEffect(() => {    
-       localStorage.setItem("contacts", JSON.stringify(contacts));
-    }, [contacts]
-  );
+  useEffect(() => {
+    localStorage.setItem("contacts", JSON.stringify(contacts));
+  }, [contacts]);
 
   const addContact = (data) => {
     if (contacts.find((contact) => contact.name === data.name)) {
@@ -37,12 +27,11 @@ export default function App() {
     console.log("Contacts", contacts);
   };
 
-  const handleFilter = (filterQuery) => setFilterQuery( filterQuery);
+  const handleFilter = (filterQuery) => setFilterQuery(filterQuery);
 
   const deleteContact = (deletedId) => {
-    setContacts(contacts.filter(contact => contact.id !== deletedId));
+    setContacts(contacts.filter((contact) => contact.id !== deletedId));
   };
-
 
   const filteredContacts = () => {
     console.log(contacts, filterQuery);
@@ -50,21 +39,16 @@ export default function App() {
       contact.name.toLowerCase().includes(filterQuery.toLowerCase())
     );
   };
-  
-  return (
-      <Container>
-        <Section title="Phonebook">
-          <ContactForm onSubmit={addContact} />
-        </Section>
-        <Section title="Contacts">
-          <Filter filter={filterQuery} onChange={handleFilter} />
-          <ContactList
-            contacts={filteredContacts()}
-            onDelete={deleteContact}
-          />
-        </Section>
-      </Container>
-    );
-  
-}
 
+  return (
+    <Container>
+      <Section title="Phonebook">
+        <ContactForm onSubmit={addContact} />
+      </Section>
+      <Section title="Contacts">
+        <Filter filter={filterQuery} onChange={handleFilter} />
+        <ContactList contacts={filteredContacts()} onDelete={deleteContact} />
+      </Section>
+    </Container>
+  );
+}
