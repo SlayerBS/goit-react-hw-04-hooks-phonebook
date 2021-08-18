@@ -8,7 +8,7 @@ import Section from "./components/Section";
 
 export default function App() {
   const [contacts, setContacts] = useState(() => {
-    return JSON.parse(localStorage.getItem("contacts"));
+    return JSON.parse(localStorage.getItem("contacts")) ?? [];
   }); //lazy state ititialization
   const [filterQuery, setFilterQuery] = useState("");
 
